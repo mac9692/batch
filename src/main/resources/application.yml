@@ -1,3 +1,10 @@
 spring:
   application:
     name: batch
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cherrymall
+    username: cherrymall
+    password: cherrymall1234
+    hikari:
+      maximum-pool-size: 4
