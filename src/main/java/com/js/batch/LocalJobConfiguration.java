@@ -1,5 +1,6 @@
 package com.js.batch;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,29 +18,33 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @version 1.0
  * @since 2024/04/04
  */
-@Configuration
 @Slf4j
-public class JobConfiguration {
+@Configuration
+@RequiredArgsConstructor
+public class LocalJobConfiguration {
+
+    private final JobRepository jobRepository;
+    private final PlatformTransactionManager platformTransactionManager;
 
     @Bean
-    public Job testJob(JobRepository jobRepository, Step firstStep) {
-        return new JobBuilder("testJob", jobRepository)
-                .start(firstStep)
+    public Job localJob() {
+        return new JobBuilder("localJob", jobRepository)
+                .start(step())
                 .build();
     }
 
     @Bean
-    public Step firstStep(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager) {
-        return new StepBuilder("firstStep", jobRepository)
-                .tasklet(testTasklet, platformTransactionManager)
+    public Step step() {
+        return new StepBuilder("localStep", jobRepository)
+                .tasklet(localTasklet(), platformTransactionManager)
                 .build();
     }
 
     @Bean
-    public Tasklet testTasklet() {
+    public Tasklet localTasklet() {
         return (contribution, chunkContext) -> {
             log.info("======================");
-            log.info("익명 실행 함수");
+            log.info("localTasklet");
             log.info("======================");
 
             return RepeatStatus.FINISHED;

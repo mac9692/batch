@@ -1,10 +1,38 @@
 spring:
   application:
     name: batch
-
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
   datasource:
     url: jdbc:postgresql://localhost:5432/cherrymall
     username: cherrymall
     password: cherrymall1234
     hikari:
       maximum-pool-size: 4
+  batch:
+    job:
+      name: localJob
+    jdbc:
+      initialize-schema: always
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cherrymall
+    username: cherrymall
+    password: cherrymall1234
+    hikari:
+      maximum-pool-size: 4
+  batch:
+    job:
+      name: developJob
+    jdbc:
+      initialize-schema: always
